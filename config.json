@@ -1,0 +1,14 @@
+{
+  "highscore_filename": "highscores.json",
+  "lives": 3,
+  "seed": 42,
+  "points_per_pacgum": 10,
+  "points_per_super_pacgum": 50,
+  "points_per_ghost": 200,
+  "level_max_time": 90,
+  "power_seconds": 8,
+  "ghost_respawn_seconds": 5,
+  "player_speed": 7,
+  "ghost_speed": 4,
+  "levels": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+}
