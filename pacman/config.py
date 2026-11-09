@@ -1,4 +1,4 @@
-"""Validated configuration with JSON comments."""
+"""Valida a configuração JSON com suporte a comentários."""
 import json
 import logging
 from pathlib import Path
@@ -11,7 +11,7 @@ DEFAULTS = {'lives': 3, 'points_per_pacgum': 10,
 
 
 def integer(value: Any, default: int, low: int, high: int) -> int:
-    """Validate bounded integer settings."""
+    """Valida configurações inteiras dentro dos limites permitidos."""
     if type(value) is not int or not low <= value <= high:
         logging.warning('Invalid value %r; using %s', value, default)
         return default
@@ -19,14 +19,17 @@ def integer(value: Any, default: int, low: int, high: int) -> int:
 
 
 def load(path: Path) -> dict[str, Any]:
-    """Load defaults for unreadable files and invalid values."""
+    """Usa valores padrão para arquivos ilegíveis e configurações inválidas."""
     raw: dict[str, Any] = {}
+
     try:
         if path.suffix.lower() != '.json':
             raise ValueError('expected a .json file')
+
         data = json.loads('\n'.join(
             line for line in path.read_text().splitlines()
             if not line.lstrip().startswith('#')))
+
         if not isinstance(data, dict):
             raise ValueError('expected a JSON object')
         raw = data

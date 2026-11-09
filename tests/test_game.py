@@ -1,4 +1,4 @@
-"""Acceptance checks for rules, configuration and storage."""
+"""Verifica a aceitação das regras, da configuração e do armazenamento."""
 import json
 import tempfile
 import unittest
@@ -9,15 +9,15 @@ from pacman.scores import Scores
 
 
 class Acceptance(unittest.TestCase):
-    """Exercise real external generation and deterministic game rules."""
+    """Testa o gerador externo real e as regras determinísticas do jogo."""
 
     def setUp(self) -> None:
-        """Use the shipped configuration."""
+        """Carrega a configuração fornecida com o projeto."""
         self.config = load(Path('config.json'))
         self.game = Game(self.config)
 
     def test_maze(self) -> None:
-        """Seed reproducibility, reciprocal movement and reachable items."""
+        """Verifica sementes reproduzíveis, passagens recíprocas e itens acessíveis."""
         other = Game(self.config)
         self.assertEqual(self.game.maze.cells, other.maze.cells)
         maze = self.game.maze
@@ -29,7 +29,7 @@ class Acceptance(unittest.TestCase):
                 self.assertIn(point, maze.neighbors(neighbor))
 
     def test_collision(self) -> None:
-        """Damage, respawn protection, power scoring and revival."""
+        """Verifica dano, proteção ao reaparecer, pontos de poder e renascimento."""
         game = self.game
         game.grace = 0
         game.ghosts[0].position = game.player
@@ -46,7 +46,7 @@ class Acceptance(unittest.TestCase):
         self.assertEqual(game.ghosts[0].revive, 0)
 
     def test_progression_pause_timeout(self) -> None:
-        """Ten levels preserve score/lives, pause stops time, timeout loses."""
+        """Verifica dez níveis, pontos, vidas, pausa e derrota por tempo esgotado."""
         game = self.game
         game.score = 123
         game.lives = 2
@@ -64,7 +64,7 @@ class Acceptance(unittest.TestCase):
         self.assertEqual(other.state, 'lost')
 
     def test_movement_and_pellet(self) -> None:
-        """Blocked movement stays put and normal dots score once."""
+        """Verifica o movimento e a pontuação única das pastilhas comuns."""
         game = self.game
         game.ghosts.clear()
         target = next(p for p in game.maze.neighbors(game.player)
@@ -77,7 +77,7 @@ class Acceptance(unittest.TestCase):
         self.assertNotIn(target, game.pellets)
 
     def test_power_flee_and_walls(self) -> None:
-        """Power pellets score once, ghosts flee and walls block movement."""
+        """Verifica superpastilhas, fuga dos fantasmas e bloqueio pelas paredes."""
         game = self.game
         game.ghosts.clear()
         game.player = next(iter(game.super_pellets))
@@ -101,7 +101,7 @@ class Acceptance(unittest.TestCase):
                          expected)
 
     def test_config_and_scores(self) -> None:
-        """Comments, invalid types, corrupted records and persistent top ten."""
+        """Verifica comentários, tipos inválidos, registros corrompidos e ranking."""
         with tempfile.TemporaryDirectory() as directory:
             config = Path(directory) / 'test.json'
             config.write_text('# comment\n' + json.dumps({

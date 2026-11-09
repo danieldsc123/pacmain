@@ -1,4 +1,4 @@
-"""Adapter to the assigned, unmodified generator."""
+"""Adapta a interface do gerador atribuído sem modificá-lo."""
 from collections import deque
 from typing import Any
 
@@ -8,10 +8,10 @@ MOVES = ((0, -1, 1, 4), (1, 0, 2, 8),
 
 
 class Maze:
-    """Represent wall masks and reciprocal passages."""
+    """Representa as máscaras das paredes e as passagens recíprocas."""
 
     def __init__(self, width: int, height: int, seed: int) -> None:
-        """Generate and validate a maze through the external API."""
+        """Gera e valida um labirinto pela interface do pacote externo."""
         from mazegenerator import MazeGenerator
         generator: Any = MazeGenerator(size=(width, height), perfect=False,
                                        seed=seed)
@@ -32,7 +32,7 @@ class Maze:
                          (0, height - 1), (width - 1, height - 1))]
 
     def neighbors(self, point: Point) -> list[Point]:
-        """Return reciprocal in-bounds corridor neighbors."""
+        """Retorna vizinhos com passagens recíprocas dentro dos limites."""
         x, y = point
         return [(x + dx, y + dy) for dx, dy, bit, opposite in MOVES
                 if 0 <= x + dx < self.width and 0 <= y + dy < self.height
@@ -40,7 +40,7 @@ class Maze:
                 and not self.cells[y + dy][x + dx] & opposite]
 
     def distances(self, start: Point) -> dict[Point, int]:
-        """Compute shortest passage distances using BFS."""
+        """Calcula as menores distâncias pelas passagens com busca em largura."""
         found = {start: 0}
         queue = deque([start])
         while queue:
@@ -52,6 +52,6 @@ class Maze:
         return found
 
     def nearest(self, target: Point) -> Point:
-        """Find a reachable cell nearest the geometric target."""
+        """Encontra a célula acessível mais próxima do alvo geométrico."""
         return min(self.reachable, key=lambda p: (
             abs(p[0] - target[0]) + abs(p[1] - target[1]), p))

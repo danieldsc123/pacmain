@@ -8,7 +8,7 @@
   "level_max_time": 90,
   "power_seconds": 8,
   "ghost_respawn_seconds": 5,
-  "player_speed": 7,
-  "ghost_speed": 4,
+  "player_speed": 6,
+  "ghost_speed": 2,
   "levels": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
 }

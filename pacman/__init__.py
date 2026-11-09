@@ -1,1 +1,1 @@
-"""Pac-Man game package."""
+"""Reúne os módulos do jogo Pac-Man."""

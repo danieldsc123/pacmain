@@ -1,4 +1,4 @@
-"""Game rules independent of the graphical interface."""
+"""Define as regras do jogo independentemente da interface gráfica."""
 import random
 from dataclasses import dataclass
 from typing import Any
@@ -7,7 +7,7 @@ from pacman.maze import Maze, Point
 
 @dataclass
 class Ghost:
-    """Enemy position, home corner and revival timer."""
+    """Armazena a posição, o canto de origem e o tempo de retorno do inimigo."""
 
     position: Point
     home: Point
@@ -15,10 +15,10 @@ class Ghost:
 
 
 class Game:
-    """Manage level progression, movement, scoring and timers."""
+    """Gerencia níveis, movimento, pontuação e temporizadores."""
 
     def __init__(self, config: dict[str, Any]) -> None:
-        """Start a new run."""
+        """Inicia uma nova partida."""
         self.config = config
         self.level = 0
         self.score = 0
@@ -31,7 +31,7 @@ class Game:
         self.start_level()
 
     def start_level(self) -> None:
-        """Use a fixed first seed and random subsequent seeds."""
+        """Usa uma semente fixa no primeiro nível e aleatórias nos seguintes."""
         level = self.config['levels'][self.level]
         seed = (self.config['seed'] if self.level == 0
                 else self.rng.randint(1, 2**31 - 1))
@@ -48,7 +48,7 @@ class Game:
         self.player_clock = self.ghost_clock = 0.0
 
     def next_level(self) -> None:
-        """Preserve score and lives when advancing."""
+        """Preserva a pontuação e as vidas ao avançar de nível."""
         self.level += 1
         if self.level == len(self.config['levels']):
             self.state = 'won'
@@ -56,7 +56,7 @@ class Game:
             self.start_level()
 
     def collide(self) -> None:
-        """Resolve collisions and protect the player's respawn."""
+        """Resolve colisões e protege o jogador ao reaparecer."""
         for ghost in self.ghosts:
             if ghost.revive > 0 or ghost.position != self.player:
                 continue
@@ -73,7 +73,7 @@ class Game:
                 return
 
     def move_player(self) -> None:
-        """Follow a buffered turn when a passage is available."""
+        """Executa a mudança de direção pendente quando houver passagem."""
         neighbors = self.maze.neighbors(self.player)
         x, y = self.player
         desired = (x + self.wanted[0], y + self.wanted[1])
@@ -95,7 +95,7 @@ class Game:
             self.next_level()
 
     def move_ghosts(self) -> None:
-        """Chase by corridor distance or flee while edible."""
+        """Persegue pela distância nos corredores ou foge enquanto vulnerável."""
         distances = self.maze.distances(self.player)
         for ghost in self.ghosts:
             if ghost.revive > 0:
@@ -109,7 +109,7 @@ class Game:
         self.collide()
 
     def update(self, dt: float) -> None:
-        """Advance active simulation time in bounded steps."""
+        """Avança o tempo da simulação ativa em intervalos limitados."""
         if self.state != 'playing':
             return
         dt = max(0.0, min(dt, 0.1))

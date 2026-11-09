@@ -1,4 +1,4 @@
-"""Produce a standalone native build and a platform-uploadable ZIP."""
+"""Gera um executável nativo independente e um ZIP para publicação."""
 import shutil
 import subprocess
 import sys
@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def main() -> int:
-    """Bundle the local game, controls and editable config."""
+    """Empacota o jogo local, os controles e a configuração editável."""
     try:
         subprocess.run([sys.executable, '-m', 'PyInstaller', '--noconfirm',
                         '--clean', '--name', 'pac-man',

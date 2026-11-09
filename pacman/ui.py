@@ -1,4 +1,4 @@
-"""Canvas-only desktop interface with keyboard and mouse navigation."""
+"""Implementa a interface em Canvas com navegação por teclado e mouse."""
 from __future__ import annotations
 
 import logging
@@ -16,10 +16,10 @@ CYAN = '#55ddff'
 
 
 class App:
-    """Draw the game using basic shapes, text and window events."""
+    """Desenha o jogo usando formas básicas, texto e eventos da janela."""
 
     def __init__(self, config: dict[str, Any]) -> None:
-        """Create the window, callbacks and persistent ranking."""
+        """Cria a janela, as funções de eventos e o ranking persistente."""
         self.config = config
         self.scores = Scores(Path(config['highscore_filename']))
         self.root = tk.Tk()
@@ -42,31 +42,31 @@ class App:
         self.tick()
 
     def callback_error(self, kind: Any, error: Any, trace: Any) -> None:
-        """Recover from callback failures without a Python traceback."""
+        """Trata falhas nas funções de eventos sem exibir rastreamentos do Python."""
         logging.error('Game error: %s', error)
         self.message = f'Game error: {error}'
         self.screen = 'menu'
 
     def text(self, x: float, y: float, text: str,
              size: int = 18, color: str = WHITE) -> None:
-        """Draw a text label."""
+        """Desenha um rótulo de texto."""
         self.canvas.create_text(x, y, text=text, fill=color,
                                 font=('Courier', size, 'bold'))
 
     def button(self, y: int, title: str,
                action: Callable[[], None]) -> None:
-        """Draw a selectable menu row."""
+        """Desenha uma opção selecionável do menu."""
         self.canvas.create_rectangle(260, y - 23, 700, y + 23,
                                      fill='#14233c', outline='#284975')
         self.text(480, y, title)
         self.buttons.append((y - 23, y + 23, action))
 
     def show(self, screen: str) -> None:
-        """Change the visible screen."""
+        """Altera a tela exibida."""
         self.screen = screen
 
     def start(self) -> None:
-        """Generate a new game; surface generator failures in the menu."""
+        """Inicia uma partida e exibe falhas do gerador no menu."""
         try:
             self.game = Game(self.config)
             self.screen = 'playing'
@@ -77,7 +77,7 @@ class App:
             self.screen = 'menu'
 
     def click(self, event: tk.Event[Any]) -> None:
-        """Dispatch clicks on visible menu rows."""
+        """Encaminha os cliques nas opções visíveis do menu."""
         if 260 <= event.x <= 700:
             for low, high, action in self.buttons:
                 if low <= event.y <= high:
@@ -85,14 +85,14 @@ class App:
                     break
 
     def save(self) -> None:
-        """Save a finished run and return to the menu."""
+        """Salva a pontuação da partida encerrada e retorna ao menu."""
         if self.game:
             ok = self.scores.save(self.name, self.game.score)
             self.message = 'Score saved!' if ok else 'Could not save score.'
         self.screen = 'menu'
 
     def key(self, event: tk.Event[Any]) -> None:
-        """Handle menu, movement, pause, evaluation and name input."""
+        """Trata menus, movimento, pausa, avaliação e entrada do nome."""
         key = event.keysym.lower()
         game = self.game
         if self.screen == 'end':
@@ -151,7 +151,7 @@ class App:
                 game.power = float(self.config['power_seconds'])
 
     def draw_maze(self, game: Game) -> None:
-        """Draw wall masks, collectibles and character primitives."""
+        """Desenha as paredes, os itens coletáveis e as formas dos personagens."""
         maze = game.maze
         cell = min(880 / maze.width, 550 / maze.height)
         ox = (960 - maze.width * cell) / 2
@@ -201,7 +201,7 @@ class App:
                                         fill=WHITE, outline='')
 
     def draw(self) -> None:
-        """Render the current screen and its active controls."""
+        """Desenha a tela atual e seus controles ativos."""
         self.canvas.delete('all')
         self.buttons.clear()
         self.text(480, 48, 'PAC-MAN', 38, '#ffda35')
@@ -269,7 +269,7 @@ class App:
             self.button(550, 'Save score [Enter]', self.save)
 
     def tick(self) -> None:
-        """Schedule frames and handle failures without killing the window."""
+        """Agenda os quadros e trata falhas sem encerrar a janela."""
         now = time.monotonic()
         dt, self.previous = now - self.previous, now
         try:
@@ -284,5 +284,5 @@ class App:
         self.root.after(16, self.tick)
 
     def run(self) -> None:
-        """Run the native window event loop."""
+        """Executa o laço de eventos da janela nativa."""
         self.root.mainloop()

@@ -1,4 +1,4 @@
-"""Fault-tolerant atomic highscore persistence."""
+"""Salva o ranking de forma atômica e tolerante a falhas."""
 import json
 import logging
 import os
@@ -7,15 +7,15 @@ from pathlib import Path
 
 
 def name_clean(name: str) -> str:
-    """Keep at most ten alphanumeric characters and spaces."""
+    """Mantém até dez caracteres alfanuméricos e espaços."""
     return ''.join(c for c in name if c.isalnum() or c == ' ')[:10].strip()
 
 
 class Scores:
-    """Maintain the top ten valid scores."""
+    """Mantém as dez maiores pontuações válidas."""
 
     def __init__(self, path: Path) -> None:
-        """Read records and tolerate missing or corrupt storage."""
+        """Lê os registros e tolera arquivos ausentes ou corrompidos."""
         self.path = path
         self.entries: list[tuple[str, int]] = []
         try:
@@ -36,7 +36,7 @@ class Scores:
             logging.warning('Cannot read highscores: %s', exc)
 
     def save(self, name: str, score: int) -> bool:
-        """Add a score and atomically replace the on-disk table."""
+        """Adiciona uma pontuação e substitui a tabela em disco de forma atômica."""
         if type(score) is not int or score < 0:
             return False
         self.entries.append((name_clean(name) or 'Player', score))

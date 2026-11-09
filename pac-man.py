@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Command-line entry point for the Pac-Man arcade game."""
+"""Define o ponto de entrada do Pac-Man pela linha de comando."""
 import logging
 import sys
 from pathlib import Path
 
 
 def main() -> int:
-    """Validate invocation and report startup errors without tracebacks."""
+    """Valida a execução e informa erros de inicialização sem rastreamentos."""
     logging.basicConfig(level=logging.WARNING, format='%(levelname)s: %(message)s')
     if len(sys.argv) != 2:
         print('Usage: python3 pac-man.py config.json', file=sys.stderr)
